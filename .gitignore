@@ -1,0 +1,6 @@
+.turbo
+dist
+.env
+node_modules
+.docker
+.env 
