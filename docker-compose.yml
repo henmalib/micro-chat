@@ -3,6 +3,8 @@ services:
   db:
     image: postgres:17.4-alpine
     shm_size: 128mb
+    ports:
+      - 5432:5432
     volumes:
       - ./.docker/pg:/var/lib/postgresql/data
     environment:
@@ -12,14 +14,22 @@ services:
 
   valkey:
     image: valkey/valkey:8.0.2-alpine
+    ports: 
+      - 6379:6379
 
   minio:
-    image: bitnami/minio:2025.3.12
+    image: quay.io/minio/minio
+    ports:
+      - 9000:9000
+      - 9001:9001
     environment:
       MINIO_ROOT_USER: ${MINIO_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
     volumes:
-      - ./.docker/minio:/bitnami/minio/data
+      - ./.docker/minio:/data
+    command: server --console-address ":9001" /data
 
   rabbitmq:
     image: rabbitmq:4.0.7-alpine
+    ports:
+      - 5672:5672

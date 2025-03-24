@@ -12,11 +12,18 @@
   "packageManager": "pnpm@10.6.3",
   "devDependencies": {
     "@types/node": "^22.13.11",
+    "@types/pg": "^8.11.11",
+    "drizzle-kit": "^0.30.5",
     "prettier": "^3.5.3",
+    "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.13.1",
-    "@grpc/proto-loader": "^0.7.13"
+    "@grpc/proto-loader": "^0.7.13",
+    "@hono/node-server": "^1.14.0",
+    "drizzle-orm": "^0.41.0",
+    "hono": "^4.7.5",
+    "pg": "^8.14.1"
   }
 }
