@@ -1,32 +1,42 @@
-import path from "path";
-import grpc from "@grpc/grpc-js";
-import protoLoader from "@grpc/proto-loader";
-import { RoomService } from "../../../shared/grpc/proto/rooms_pb";
-
-const PROTO_PATH = path.join(__dirname, "node_modules/grpc/rpc/rooms.proto");
-
-const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
-  keepCase: true,
-  longs: String,
-  enums: String,
-  defaults: true,
-  oneofs: true,
-});
-
-const protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
+import * as grpc from "@grpc/grpc-js";
+import { IRoomsServer, RoomsClient, RoomsService } from 'grpc/proto/rooms_grpc_pb'
+import { GetRoomsRequest, GetRoomsResponse, Room } from "grpc/proto/rooms_pb";
 
 function getServer() {
   const server = new grpc.Server();
 
-  server.addService(RoomService, {});
+  server.addService(RoomsService, {
+    getRooms: (call, reply) => {
+      console.log("Info", call.request.toObject())
+
+      const response = new GetRoomsResponse()
+      const room = new Room()
+
+      room.setId("1")
+      room.setName("test")
+
+      response.addRooms(room)
+
+      reply(null, response)
+    }
+  } satisfies IRoomsServer);
 
   return server;
 }
-var routeServer = getServer();
+const routeServer = getServer();
 routeServer.bindAsync(
   "0.0.0.0:50051",
   grpc.ServerCredentials.createInsecure(),
   () => {
-    routeServer.start();
   }
 );
+
+const client = new RoomsClient('localhost:50051', grpc.credentials.createInsecure());
+
+const payload = new GetRoomsRequest()
+payload.setUserid(1)
+
+client.getRooms(payload, (err, v) => {
+  console.log("Response", err, v?.toObject())
+  process.exit(0)
+})
