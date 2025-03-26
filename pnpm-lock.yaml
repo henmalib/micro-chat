@@ -147,6 +147,9 @@ importers:
       '@types/node':
         specifier: ^22.13.11
         version: 22.13.11
+      esbuild:
+        specifier: ^0.25.1
+        version: 0.25.1
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
