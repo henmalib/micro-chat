@@ -21,6 +21,15 @@ importers:
         specifier: ^0.8.7
         version: 0.8.7
     devDependencies:
+      '@bufbuild/buf':
+        specifier: ^1.51.0
+        version: 1.51.0
+      '@bufbuild/protobuf':
+        specifier: ^2.2.5
+        version: 2.2.5
+      '@bufbuild/protoc-gen-es':
+        specifier: ^2.2.5
+        version: 2.2.5(@bufbuild/protobuf@2.2.5)
       '@types/node':
         specifier: ^22.13.11
         version: 22.13.11
@@ -70,6 +79,9 @@ importers:
       drizzle-orm:
         specifier: ^0.41.0
         version: 0.41.0(@types/pg@8.11.11)(gel@2.0.1)(pg@8.14.1)
+      grpc:
+        specifier: link:../../shared/grpc
+        version: link:../../shared/grpc
       hono:
         specifier: ^4.7.5
         version: 4.7.5
@@ -86,6 +98,9 @@ importers:
       drizzle-kit:
         specifier: ^0.30.5
         version: 0.30.5
+      esbuild:
+        specifier: ^0.25.1
+        version: 0.25.1
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -181,7 +196,100 @@ importers:
         specifier: ^5.8.2
         version: 5.8.2
 
+  shared/database:
+    dependencies:
+      drizzle-orm:
+        specifier: ^0.41.0
+        version: 0.41.0(@types/pg@8.11.11)(gel@2.0.1)(pg@8.14.1)
+      pg:
+        specifier: ^8.14.1
+        version: 8.14.1
+    devDependencies:
+      '@types/node':
+        specifier: ^22.13.11
+        version: 22.13.11
+      '@types/pg':
+        specifier: ^8.11.11
+        version: 8.11.11
+      drizzle-kit:
+        specifier: ^0.30.5
+        version: 0.30.5
+      prettier:
+        specifier: ^3.5.3
+        version: 3.5.3
+      tsx:
+        specifier: ^4.19.3
+        version: 4.19.3
+      typescript:
+        specifier: ^5.8.2
+        version: 5.8.2
+
+  shared/grpc: {}
+
 packages:
+
+  '@bufbuild/buf-darwin-arm64@1.51.0':
+    resolution: {integrity: sha512-VIXNyIuCY9JxEcJ+oZimY8qiyjCglB6qmUf5yLLxKVhq8wGGA+rFn7iqXz7ig1sNV0KAEhHFAyfGtncjcJULRA==}
+    engines: {node: '>=12'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@bufbuild/buf-darwin-x64@1.51.0':
+    resolution: {integrity: sha512-0d3j+Lpf4PFFS7RGkvMIJdeJ+HeSPgu0EPcMfbmOrNEM2c2/NSWqLPxYv6iMlL4Fl2wp4U3mSMls5IeXFf56lw==}
+    engines: {node: '>=12'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@bufbuild/buf-linux-aarch64@1.51.0':
+    resolution: {integrity: sha512-eFTvxI6B1snQii9vdb66DnP5Wylvy+vE6lq/DMnI2qCOQoZ1OsVZ9hm91b4r5Rcg2gEEJIXe3ExCJtRnYChCTA==}
+    engines: {node: '>=12'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@bufbuild/buf-linux-armv7@1.51.0':
+    resolution: {integrity: sha512-mnWmMW1V3GId9BSUbgRKPn5UZTrtVP2hXhuvPMKGRvIt5CqgQUXNJbwUQMa9j1zMQLEIViVa6yGSeewGjNahIw==}
+    engines: {node: '>=12'}
+    cpu: [arm]
+    os: [linux]
+
+  '@bufbuild/buf-linux-x64@1.51.0':
+    resolution: {integrity: sha512-CiiFFPgQs3nDlAqr0CnbYBw2uKodBPJCaIrK/EPFqkJdWD58zcGbbtZp5uk3+uHHZ/syBxI8zl/iQSoeypt9cQ==}
+    engines: {node: '>=12'}
+    cpu: [x64]
+    os: [linux]
+
+  '@bufbuild/buf-win32-arm64@1.51.0':
+    resolution: {integrity: sha512-9J9WckymQRw+iJ9cg8JquYwlSLYDfilx8vmzsoq0LQdt9yjR6WAq0cHjKuZERSZ2q+beMdi8N9Z0vvfkL1GzGA==}
+    engines: {node: '>=12'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@bufbuild/buf-win32-x64@1.51.0':
+    resolution: {integrity: sha512-adskoC+2pr2GzuQNeFv8qe6uj+fndqIubN7smXwCvL8SFBEk8Eic8VSeqfser6cQG64SfTKQPuRW3iqikngWHQ==}
+    engines: {node: '>=12'}
+    cpu: [x64]
+    os: [win32]
+
+  '@bufbuild/buf@1.51.0':
+    resolution: {integrity: sha512-DjN9wA1g9q1lYzuDLiC1v9db35mzpHEdG8iM7D36RjWdIByhIgmh/O5hoYSfFL7kMD95p3vGTPz/ZKsClf15VA==}
+    engines: {node: '>=12'}
+    hasBin: true
+
+  '@bufbuild/protobuf@2.2.5':
+    resolution: {integrity: sha512-/g5EzJifw5GF8aren8wZ/G5oMuPoGeS6MQD3ca8ddcvdXR5UELUfdTZITCGNhNXynY/AYl3Z4plmxdj/tRl/hQ==}
+
+  '@bufbuild/protoc-gen-es@2.2.5':
+    resolution: {integrity: sha512-81dI1PLMQXUkvCUH1fKJEZsx+G69LvU/0BOFeqxotFpCFEC/jTu1Ka1ViIEGT5U1r51udRs20kHZTlkR9zwfAA==}
+    engines: {node: '>=14'}
+    hasBin: true
+    peerDependencies:
+      '@bufbuild/protobuf': 2.2.5
+    peerDependenciesMeta:
+      '@bufbuild/protobuf':
+        optional: true
+
+  '@bufbuild/protoplugin@2.2.5':
+    resolution: {integrity: sha512-Z68KTDLiidUYoJ8kjs6YfhK8r58W93pOFIfGqlnK1RZQTQRtbH6WRWjSqtuiy4WjJpJZ5qE0lKtFGR+bHU8Vaw==}
 
   '@drizzle-team/brocli@0.10.2':
     resolution: {integrity: sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w==}
@@ -674,6 +782,11 @@ packages:
 
   '@types/pg@8.11.11':
     resolution: {integrity: sha512-kGT1qKM8wJQ5qlawUrEkXgvMSXoV213KfMGXcwfDwUIfUHXqXYXOfS1nE1LINRJVVVx5wCm70XnFlMHaIcQAfw==}
+
+  '@typescript/vfs@1.6.1':
+    resolution: {integrity: sha512-JwoxboBh7Oz1v38tPbkrZ62ZXNHAk9bJ7c9x0eI5zBfBnBYGhURdbnh7Z4smN/MV48Y5OCcZb58n972UtbazsA==}
+    peerDependencies:
+      typescript: '*'
 
   abbrev@1.1.1:
     resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
@@ -1199,6 +1312,11 @@ packages:
     resolution: {integrity: sha512-N9FDOVaY3yz0YCOhYIgOGYad7+m2ptvinXygw27WPLQvcZDl3+0Sa77KGVlLSiuPDChOUEnTKE9VJwLSi9BPGQ==}
     hasBin: true
 
+  typescript@5.4.5:
+    resolution: {integrity: sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
   typescript@5.8.2:
     resolution: {integrity: sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==}
     engines: {node: '>=14.17'}
@@ -1251,6 +1369,55 @@ packages:
     engines: {node: '>=12'}
 
 snapshots:
+
+  '@bufbuild/buf-darwin-arm64@1.51.0':
+    optional: true
+
+  '@bufbuild/buf-darwin-x64@1.51.0':
+    optional: true
+
+  '@bufbuild/buf-linux-aarch64@1.51.0':
+    optional: true
+
+  '@bufbuild/buf-linux-armv7@1.51.0':
+    optional: true
+
+  '@bufbuild/buf-linux-x64@1.51.0':
+    optional: true
+
+  '@bufbuild/buf-win32-arm64@1.51.0':
+    optional: true
+
+  '@bufbuild/buf-win32-x64@1.51.0':
+    optional: true
+
+  '@bufbuild/buf@1.51.0':
+    optionalDependencies:
+      '@bufbuild/buf-darwin-arm64': 1.51.0
+      '@bufbuild/buf-darwin-x64': 1.51.0
+      '@bufbuild/buf-linux-aarch64': 1.51.0
+      '@bufbuild/buf-linux-armv7': 1.51.0
+      '@bufbuild/buf-linux-x64': 1.51.0
+      '@bufbuild/buf-win32-arm64': 1.51.0
+      '@bufbuild/buf-win32-x64': 1.51.0
+
+  '@bufbuild/protobuf@2.2.5': {}
+
+  '@bufbuild/protoc-gen-es@2.2.5(@bufbuild/protobuf@2.2.5)':
+    dependencies:
+      '@bufbuild/protoplugin': 2.2.5
+    optionalDependencies:
+      '@bufbuild/protobuf': 2.2.5
+    transitivePeerDependencies:
+      - supports-color
+
+  '@bufbuild/protoplugin@2.2.5':
+    dependencies:
+      '@bufbuild/protobuf': 2.2.5
+      '@typescript/vfs': 1.6.1(typescript@5.4.5)
+      typescript: 5.4.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@drizzle-team/brocli@0.10.2': {}
 
@@ -1541,6 +1708,13 @@ snapshots:
       '@types/node': 22.13.11
       pg-protocol: 1.8.0
       pg-types: 4.0.2
+
+  '@typescript/vfs@1.6.1(typescript@5.4.5)':
+    dependencies:
+      debug: 4.4.0
+      typescript: 5.4.5
+    transitivePeerDependencies:
+      - supports-color
 
   abbrev@1.1.1: {}
 
@@ -2019,6 +2193,8 @@ snapshots:
       turbo-linux-arm64: 2.4.4
       turbo-windows-64: 2.4.4
       turbo-windows-arm64: 2.4.4
+
+  typescript@5.4.5: {}
 
   typescript@5.8.2: {}
 

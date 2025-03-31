@@ -4,13 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "proto:gen": "./scripts/generate-types.sh && node ./shared/grpc/build.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.6.3",
   "devDependencies": {
+    "@bufbuild/buf": "^1.51.0",
+    "@bufbuild/protobuf": "^2.2.5",
+    "@bufbuild/protoc-gen-es": "^2.2.5",
     "@types/node": "^22.13.11",
     "grpc-tools": "1.12.4",
     "prettier": "^3.5.3",
