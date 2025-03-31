@@ -5,3 +5,4 @@ onlyBuiltDependencies:
   - esbuild
   - grpc-tools
   - protobufjs
+  - protoc-gen-js

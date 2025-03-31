@@ -15,7 +15,6 @@
     "@types/pg": "^8.11.11",
     "drizzle-kit": "^0.30.5",
     "esbuild": "^0.25.1",
-    "prettier": "^3.5.3",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   },

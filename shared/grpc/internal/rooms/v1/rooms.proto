@@ -7,7 +7,7 @@ service Rooms {
 }
 
 message GetRoomsRequest {
-  int64 userId = 2;
+  int64 user_id = 2;
 }
 
 message GetRoomsResponse {

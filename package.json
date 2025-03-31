@@ -4,26 +4,24 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "proto:gen": "./scripts/generate-types.sh && node ./shared/grpc/build.js"
+    "proto:gen": "./scripts/generate-types.sh"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.6.3",
   "devDependencies": {
-    "@bufbuild/buf": "^1.51.0",
-    "@bufbuild/protobuf": "^2.2.5",
-    "@bufbuild/protoc-gen-es": "^2.2.5",
+    "@biomejs/biome": "1.9.4",
     "@types/node": "^22.13.11",
     "grpc-tools": "1.12.4",
-    "prettier": "^3.5.3",
+    "protoc-gen-js": "3.21.4-4",
+    "ts-protoc-gen": "^0.15.0",
     "turbo": "^2.4.4",
     "typescript": "^5.8.2"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.13.1",
     "@grpc/proto-loader": "^0.7.13",
-    "google-protobuf": "^3.21.4",
-    "protoc-gen-ts": "^0.8.7"
+    "google-protobuf": "^3.21.4"
   }
 }
