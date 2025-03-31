@@ -1,21 +1,24 @@
 {
-  "name": "auth",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.6.3",
-  "dependencies": {
-    "@grpc/grpc-js": "^1.13.1",
-    "@grpc/proto-loader": "^0.7.13"
-  },
-  "devDependencies": {
-    "@types/node": "^22.13.11",
-    "typescript": "^5.8.2"
-  }
+	"name": "auth",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"packageManager": "pnpm@10.6.3",
+	"dependencies": {
+		"@grpc/grpc-js": "^1.13.1",
+		"@grpc/proto-loader": "^0.7.13",
+		"database": "link:../../shared/database",
+		"drizzle-orm": "^0.41.0",
+		"grpc": "link:../../shared/grpc"
+	},
+	"devDependencies": {
+		"@types/node": "^22.13.11",
+		"typescript": "^5.8.2"
+	}
 }
