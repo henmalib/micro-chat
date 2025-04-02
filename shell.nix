@@ -8,6 +8,7 @@ pkgs.mkShell {
     protoc-gen-js
     gcc
     nix-ld
+    lefthook
   ];
 
   NIX_LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
@@ -23,5 +24,6 @@ pkgs.mkShell {
     fi
 
     set -a && source .env && set +a
+    lefthook install
   '';
 }
