@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "proto:gen": "./scripts/generate-types.sh"
+    "proto:gen": "./scripts/generate-types.sh",
+    "format": "biome format --write ./{apps,shared}",
+    "build:all": "node scripts/build.js"
   },
   "keywords": [],
   "author": "",

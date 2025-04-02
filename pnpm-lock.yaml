@@ -48,6 +48,15 @@ importers:
       '@grpc/proto-loader':
         specifier: ^0.7.13
         version: 0.7.13
+      database:
+        specifier: link:../../shared/database
+        version: link:../../shared/database
+      drizzle-orm:
+        specifier: ^0.41.0
+        version: 0.41.0(@types/pg@8.11.11)(gel@2.0.1)(pg@8.14.1)
+      grpc:
+        specifier: link:../../shared/grpc
+        version: link:../../shared/grpc
     devDependencies:
       '@types/node':
         specifier: ^22.13.11
@@ -67,6 +76,9 @@ importers:
       '@hono/node-server':
         specifier: ^1.14.0
         version: 1.14.0(hono@4.7.5)
+      '@hono/zod-validator':
+        specifier: ^0.4.3
+        version: 0.4.3(hono@4.7.5)(zod@3.24.2)
       drizzle-orm:
         specifier: ^0.41.0
         version: 0.41.0(@types/pg@8.11.11)(gel@2.0.1)(pg@8.14.1)
@@ -79,6 +91,9 @@ importers:
       pg:
         specifier: ^8.14.1
         version: 8.14.1
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@types/node':
         specifier: ^22.13.11
@@ -184,6 +199,9 @@ importers:
       drizzle-kit:
         specifier: ^0.30.5
         version: 0.30.5
+      esbuild:
+        specifier: ^0.25.1
+        version: 0.25.1
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -696,6 +714,12 @@ packages:
     engines: {node: '>=18.14.1'}
     peerDependencies:
       hono: ^4
+
+  '@hono/zod-validator@0.4.3':
+    resolution: {integrity: sha512-xIgMYXDyJ4Hj6ekm9T9Y27s080Nl9NXHcJkOvkXPhubOLj8hZkOL8pDnnXfvCf5xEE8Q4oMFenQUZZREUY2gqQ==}
+    peerDependencies:
+      hono: '>=3.9.0'
+      zod: ^3.19.1
 
   '@js-sdsl/ordered-map@4.4.2':
     resolution: {integrity: sha512-iUKgm52T8HOE/makSxjqoWhe95ZJA1/G1sYsGev2JDKUSS14KAgg1LHb+Ba+IPow0xflbnSkOsZcO08C7w1gYw==}
@@ -1326,6 +1350,9 @@ packages:
     resolution: {integrity: sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==}
     engines: {node: '>=12'}
 
+  zod@3.24.2:
+    resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
+
 snapshots:
 
   '@biomejs/biome@1.9.4':
@@ -1600,6 +1627,11 @@ snapshots:
   '@hono/node-server@1.14.0(hono@4.7.5)':
     dependencies:
       hono: 4.7.5
+
+  '@hono/zod-validator@0.4.3(hono@4.7.5)(zod@3.24.2)':
+    dependencies:
+      hono: 4.7.5
+      zod: 3.24.2
 
   '@js-sdsl/ordered-map@4.4.2': {}
 
@@ -2185,3 +2217,5 @@ snapshots:
       string-width: 4.2.3
       y18n: 5.0.8
       yargs-parser: 21.1.1
+
+  zod@3.24.2: {}

@@ -3,8 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "generate": "drizzle-kit generate",
+    "migrate": "drizzle-kit migrate",
+    "build": "tsc && node ./build.js"
+  },
+  "exports": {
+    "./*": "./dist/*.js"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +22,7 @@
     "@types/node": "^22.13.11",
     "@types/pg": "^8.11.11",
     "drizzle-kit": "^0.30.5",
+    "esbuild": "^0.25.1",
     "prettier": "^3.5.3",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"

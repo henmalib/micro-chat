@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package auth.v1;
+
+service Auth {
+    rpc CheckToken(CheckTokenRequest) returns (CheckTokenResponse) {}
+    rpc Register(RegisterRequest) returns (RegisterResponse) {}
+    rpc Auth(AuthRequest) returns (AuthResponse) {}
+}
+
+message CheckTokenRequest {
+    string token = 1;
+}
+
+message CheckTokenResponse {
+    int64 user_id = 1;
+    bool is_valid = 2;
+}
+
+message RegisterRequest {
+    string username = 1;
+    string email = 2;
+    string password = 3;
+}
+
+message RegisterResponse {
+    int64 user_id = 1;
+    string token = 2;
+    string refresh = 3;
+}
+
+message AuthRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message AuthResponse {
+    string token = 1;
+    string refresh = 2;
+}

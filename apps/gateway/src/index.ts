@@ -1,23 +1,20 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import { RoomsClient } from "grpc/dist/rooms/v1/rooms_grpc_pb";
-import * as grpc from "@grpc/grpc-js"
-import { GetRoomsRequest, GetRoomsResponse } from "grpc/dist/rooms/v1/rooms_pb";
-import { promisifyClient } from "./client";
-
-const clients = {
-    rooms: promisifyClient(new RoomsClient("127.0.0.1:50051", grpc.credentials.createInsecure()))
-}
+import { GetRoomsRequest } from "grpc/rooms/v1/rooms_pb";
+import { clients } from "./constants";
+import v1AuthHandler from "./enpoints/auth/v1/auth";
 
 const app = new Hono();
 
+app.route("/auth/v1", v1AuthHandler);
+
 app.get("/", async (ctx) => {
-    const payload = new GetRoomsRequest()
-    payload.setUserid(1)
+  const payload = new GetRoomsRequest();
+  payload.setUserId(1);
 
-    const response = await clients.rooms.getRooms(payload);
+  const response = await clients.rooms.getRooms(payload);
 
-    return ctx.json(response.toObject())
+  return ctx.json(response.toObject());
 });
 
 serve(app);

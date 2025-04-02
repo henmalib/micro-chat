@@ -1,9 +1,6 @@
 import * as grpc from "@grpc/grpc-js";
-import {
-  RoomsService,
-  type IRoomsServer,
-} from "grpc/dist/rooms/v1/rooms_grpc_pb";
-import { GetRoomsResponse, Room } from "grpc/dist/rooms/v1/rooms_pb";
+import { RoomsService, type IRoomsServer } from "grpc/rooms/v1/rooms_grpc_pb";
+import { GetRoomsResponse, Room } from "grpc/rooms/v1/rooms_pb";
 
 function getServer() {
   const server = new grpc.Server();

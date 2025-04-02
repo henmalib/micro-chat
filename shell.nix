@@ -16,5 +16,12 @@ pkgs.mkShell {
 
   shellHook = ''
     export LD_LIBRARY_PATH=$NIX_LD_LIBRARY_PATH:$LD_LIBRARY_PATH
+
+    if [ ! -f .env ]
+    then
+      export $(cat .env | xargs)
+    fi
+
+    set -a && source .env && set +a
   '';
 }
