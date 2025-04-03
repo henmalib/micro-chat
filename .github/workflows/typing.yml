@@ -14,14 +14,27 @@ jobs:
         node-version: [23]
     steps:
       - uses: actions/checkout@v4
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
+
       - name: Install dependencies
         run: pnpm install
+
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v3
+
+      - name: Generate GRPC files
+        run: pnpm proto:gen
+
+      - name: Generate Database Module
+        run: cd shared/database && pnpm build && cd ../..
+
       - run: npx tsc --noEmit
-        name: pnpm Example Workflow
+        name: Check Project Types
