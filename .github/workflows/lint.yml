@@ -17,4 +17,4 @@ jobs:
         with:
           version: latest
       - name: Run Biome
-        run: biome ci . --config-file=./biome.json
+        run: biome ci .

@@ -1,16 +1,14 @@
 {
-  "name": "grpc",
-  "version": "1.0.0",
-  "description": "",
-  "files": [
-    "dist/**/*.{d.ts,js}"
-  ],
-  "scripts": {},
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.6.3",
-  "exports": {
-    "./*": "./dist/*.js"
-  }
+	"name": "grpc",
+	"version": "1.0.0",
+	"description": "",
+	"files": ["dist/**/*.{d.ts,js}"],
+	"scripts": {},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"packageManager": "pnpm@10.6.3",
+	"exports": {
+		"./*": "./dist/*.js"
+	}
 }
