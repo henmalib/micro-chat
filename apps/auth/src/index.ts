@@ -1,70 +1,146 @@
-import * as grpc from "@grpc/grpc-js";
-import { AuthService, type IAuthServer } from "grpc/auth/v1/auth_grpc_pb";
-import { userSchema } from "database/db/schema";
-import db from "database/index";
-import { eq } from "drizzle-orm";
-import * as bcrypt from 'bcrypt'
-import * as jwt from 'jsonwebtoken'
-import { AuthResponse } from "grpc/auth/v1/auth_pb";
+import * as grpc from '@grpc/grpc-js';
+import { AuthService, type IAuthServer } from 'grpc/auth/v1/auth_grpc_pb';
+import { userSchema } from 'database/db/schema';
+import db from 'database/index';
+import { eq } from 'drizzle-orm';
+import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
+import { AuthResponse, RegisterResponse } from 'grpc/auth/v1/auth_pb';
+import { env } from './env';
+import { z } from 'zod';
+
+const registerSchema = z.object({
+	email: z.string().email('Email has wrong format'),
+	password: z.string().min(8, 'Password should be at least 8 characters long'),
+	nickname: z.string().min(3, "Nickname can't be shorted than 3 charatres"),
+});
+
+function getRandomInt(min: number, max: number) {
+	const mn = Math.ceil(min);
+	const mx = Math.floor(max);
+	return Math.floor(Math.random() * (mx - mn + 1)) + mn;
+}
+
+const characters = ['qwertyuiopasdfghjklzxcvbnm'];
+characters.push(characters[0].toUpperCase());
+characters.push(',./p[;\'"1234567890');
+const ch = characters.join('');
+const generatePeper = (length = 8) => {
+	let result = '';
+
+	for (let i = 0; i < length; i++) {
+		result += ch[getRandomInt(0, ch.length - 1)];
+	}
+
+	return result;
+};
+
+const generateTokens = (userId: number) => {
+	const token = jwt.sign(
+		{
+			userId: userId,
+		},
+		env.JWT_SECRET,
+		{ expiresIn: '10m' },
+	);
+
+	// TODO: save refresh token in db
+	// TODO: reset old refresh token, create a new one with same exp date
+	const refresh = jwt.sign(
+		{
+			userId: userId,
+		},
+		env.REFRESH_SECRET,
+		{ expiresIn: '30d' },
+	);
+
+	return {
+		token,
+		refresh,
+	};
+};
 
 function getServer() {
-  const server = new grpc.Server();
+	const server = new grpc.Server();
 
-  server.addService(AuthService, {
-    auth: async (payload, reply) => {
-      const body = payload.request;
+	server.addService(AuthService, {
+		auth: async (payload, reply) => {
+			const body = payload.request;
 
-      const dbUser = await db
-        .select({
-          id: userSchema.id,
-          email: userSchema.email,
-          passwordHash: userSchema.passwordHash,
-          pepper: userSchema.pepper
-        })
-        .from(userSchema)
-        .where(eq(userSchema.email, body.getEmail()))
-        .limit(1)
-        .execute();
+			const dbUser = await db
+				.select({
+					id: userSchema.id,
+					email: userSchema.email,
+					passwordHash: userSchema.passwordHash,
+					pepper: userSchema.pepper,
+				})
+				.from(userSchema)
+				.where(eq(userSchema.email, body.getEmail()))
+				.limit(1)
+				.execute();
 
-      if (!dbUser)
-        return reply(new Error("No user were found with this email"), null);
+			if (!dbUser?.length)
+				return reply(new Error('No user were found with this email'), null);
 
-      const user = dbUser[0];
+			const user = dbUser[0];
 
-      const isRightPass = await bcrypt.compare(body.getPassword() + user.pepper, user.passwordHash)
-      if (!isRightPass) {
-        return reply(new Error("Wrong email or password"), null)
-      }
+			const isRightPass = await bcrypt.compare(
+				body.getPassword() + user.pepper,
+				user.passwordHash,
+			);
+			if (!isRightPass) {
+				return reply(new Error('Wrong password'), null);
+			}
 
-      // TODO: check for env, maybe create a constatd object
-      const token = jwt.sign({
-        userId: user.id
-      }, process.env.JWT_SECRET!, { expiresIn: '10m' })
+			const { refresh, token } = generateTokens(user.id);
 
-      // TODO: save refresh token in db
-      // TODO: reset old refresh token, create a new one with same exp date
-      const refresh = jwt.sign({
-        userId: user.id
-      }, process.env.REFRESH_SECRET!, { expiresIn: '30d', encoding: 'RS256' })
+			const response = new AuthResponse();
+			response.setRefresh(refresh);
+			response.setToken(token);
 
-      const response = new AuthResponse()
-      response.setRefresh(refresh)
-      response.setToken(token)
+			reply(null, response);
+		},
+		checkToken: () => {},
+		register: async (payload, reply) => {
+			const body = await registerSchema.parseAsync(payload.request.toObject());
 
-      reply(null, response)
-    },
-    checkToken: () => {},
-    register: () => {},
-  } satisfies IAuthServer);
+			const pepper = generatePeper(8);
+			const passwordHash = await bcrypt.hash(body.password + pepper, 12);
 
-  return server;
+			try {
+				// Insert will throw an error because email is unique field
+				const [user] = await db
+					.insert(userSchema)
+					.values({
+						email: body.email,
+						username: body.nickname,
+						pepper,
+						passwordHash,
+					})
+					.returning();
+
+				const response = new RegisterResponse();
+				const { refresh, token } = generateTokens(user.id);
+
+				response.setToken(token);
+				response.setRefresh(refresh);
+				response.setUserId(user.id);
+
+				return reply(null, response);
+			} catch (e) {
+				return reply(new Error('User with such email already exists'), null);
+			}
+		},
+	} satisfies IAuthServer);
+
+	return server;
 }
 
 const routeServer = getServer();
 
 // TODO: handle from ENV
 routeServer.bindAsync(
-  "0.0.0.0:50052",
-  grpc.ServerCredentials.createInsecure(),
-  () => {}
+	env.SERVER_HOST,
+	grpc.ServerCredentials.createInsecure(),
+	() => {},
 );

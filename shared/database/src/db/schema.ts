@@ -1,4 +1,4 @@
-import { serial, text, pgTable, integer, uniqueIndex } from "drizzle-orm/pg-core";
+import { serial, text, pgTable, integer, uniqueIndex, date } from "drizzle-orm/pg-core";
 
 export const userSchema = pgTable("users", {
   id: serial("id").primaryKey(),
@@ -7,6 +7,8 @@ export const userSchema = pgTable("users", {
   passwordHash: text("password_hash").notNull(),
   pepper: text("pepper"),
   avatarUrl: text("avatar_url"),
+
+  createdAt: date('created_at').defaultNow().notNull()
 }, (table) => [
   uniqueIndex('email_index').on(table.email)
 ]);
