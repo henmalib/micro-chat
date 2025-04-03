@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "proto:gen": "./scripts/generate-types.sh",
-    "format": "biome format --write ./{apps,shared}",
+    "check": "pnpx @biomejs/biome check --no-errors-on-unmatched --files-ignore-unknown=true --organize-imports-enabled=true --fix ./{apps,shared}",
     "build:all": "node scripts/build.js"
   },
   "keywords": [],

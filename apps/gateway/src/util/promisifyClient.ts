@@ -2,11 +2,11 @@
 // https://github.com/timostamm/protobuf-ts/discussions/345#discussioncomment-3106495
 
 import type {
-	Client,
-	ServiceError,
 	CallOptions,
+	Client,
 	ClientUnaryCall,
 	Metadata,
+	ServiceError,
 } from '@grpc/grpc-js';
 
 type OriginalCall<T, U> = (
