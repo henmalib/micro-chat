@@ -1,29 +1,46 @@
-import { Hono } from "hono";
-import { clients } from "../../../constants";
-import { AuthRequest } from "grpc/auth/v1/auth_pb";
-import { z } from "zod";
-import { zValidator } from "@hono/zod-validator";
+import { Hono } from 'hono';
+import { clients } from '../../../constants';
+import { AuthRequest } from 'grpc/auth/v1/auth_pb';
+import { z } from 'zod';
+import { zValidator } from '@hono/zod-validator';
+import { ErrorCodes, getErrorObject } from '../../../util/errorResponse';
 
 const app = new Hono();
 
 const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
+	email: z.string().email(),
+	password: z.string().min(8),
 });
 
-app.post("/login", zValidator("json", loginSchema), async (ctx) => {
-  const body = ctx.req.valid("json");
+// The're currently the same, but they might change in the future
+// Maybe birth date or smth
+const registerSchema = z.object({
+	email: z.string().email(),
+	password: z.string().min(8),
+});
 
-  const payload = new AuthRequest();
-  payload.setEmail(body.email);
-  payload.setPassword(body.password);
+app.post('/login', zValidator('json', loginSchema), async (ctx) => {
+	const body = ctx.req.valid('json');
 
-  const response = await clients.auth.auth(payload);
+	const payload = new AuthRequest();
+	payload.setEmail(body.email);
+	payload.setPassword(body.password);
 
-  return ctx.json({
-    accessToken: response.getToken(),
-    refreshToken: response.getRefresh(),
-  });
+	try {
+		const response = await clients.auth.auth(payload);
+
+		return ctx.json({
+			accessToken: response.getToken(),
+			refreshToken: response.getRefresh(),
+		});
+	} catch {
+		// TODO: create a constant object with all http codes
+		return ctx.json(getErrorObject(ErrorCodes.WRONG_PASS_EMAIL), 400);
+	}
+});
+
+app.post('/register', zValidator('json', registerSchema), async (ctx) => {
+	const body = ctx.req.valid('json');
 });
 
 export default app;

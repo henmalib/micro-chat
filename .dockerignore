@@ -1,0 +1,8 @@
+.docker
+.github
+.git
+node_modules
+dist
+.env
+.env.example
+*.nix

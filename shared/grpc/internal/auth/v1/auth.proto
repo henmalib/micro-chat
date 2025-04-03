@@ -6,6 +6,7 @@ service Auth {
     rpc CheckToken(CheckTokenRequest) returns (CheckTokenResponse) {}
     rpc Register(RegisterRequest) returns (RegisterResponse) {}
     rpc Auth(AuthRequest) returns (AuthResponse) {}
+    rpc RefreshToken(RefreshRequest) returns (RefreshResponse) {}
 }
 
 message CheckTokenRequest {
@@ -37,4 +38,14 @@ message AuthRequest {
 message AuthResponse {
     string token = 1;
     string refresh = 2;
+}
+
+message RefreshRequest {
+    string expired_token = 1;
+    string refresh_token = 2;
+}
+
+message RefreshResponse {
+    string token = 1;
+    string refresh_token = 2;
 }

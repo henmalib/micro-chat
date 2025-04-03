@@ -1,4 +1,18 @@
 services:
+  gateway:
+    environment:
+      - GRPC_AUTH_SERVER=auth:50052
+    build:
+      context: .
+      target: gateway
+
+  auth:
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+      - REFRESH_SECRET=${REFRESH_SECRET}
+    build:
+      context: .
+      target: auth
 
   db:
     image: postgres:17.4-alpine
@@ -14,14 +28,14 @@ services:
 
   valkey:
     image: valkey/valkey:8.0.2-alpine
-    ports: 
+    ports:
       - 6379:6379
 
   minio:
     image: quay.io/minio/minio
     ports:
-      - 9000:9000
-      - 9001:9001
+      - 19000:9000
+      - 19001:9001
     environment:
       MINIO_ROOT_USER: ${MINIO_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}

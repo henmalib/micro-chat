@@ -2,6 +2,7 @@ packages:
   - apps/*
   - shared/*
 onlyBuiltDependencies:
+  - bcrypt
   - esbuild
   - grpc-tools
   - protobufjs

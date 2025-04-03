@@ -1,13 +1,13 @@
 import * as grpc from '@grpc/grpc-js';
-import { AuthService, type IAuthServer } from 'grpc/auth/v1/auth_grpc_pb';
+import * as bcrypt from 'bcrypt';
 import { userSchema } from 'database/db/schema';
 import db from 'database/index';
 import { eq } from 'drizzle-orm';
-import * as bcrypt from 'bcrypt';
-import * as jwt from 'jsonwebtoken';
+import { AuthService, type IAuthServer } from 'grpc/auth/v1/auth_grpc_pb';
 import { AuthResponse, RegisterResponse } from 'grpc/auth/v1/auth_pb';
-import { env } from './env';
+import * as jwt from 'jsonwebtoken';
 import { z } from 'zod';
+import { env } from './env';
 
 const registerSchema = z.object({
 	email: z.string().email('Email has wrong format'),
@@ -35,7 +35,7 @@ const generatePeper = (length = 8) => {
 	return result;
 };
 
-const generateTokens = (userId: number) => {
+const generateTokens = (userId: number, hash: string) => {
 	const token = jwt.sign(
 		{
 			userId: userId,
@@ -50,7 +50,7 @@ const generateTokens = (userId: number) => {
 		{
 			userId: userId,
 		},
-		env.REFRESH_SECRET,
+		env.REFRESH_SECRET + hash,
 		{ expiresIn: '30d' },
 	);
 
@@ -92,7 +92,7 @@ function getServer() {
 				return reply(new Error('Wrong password'), null);
 			}
 
-			const { refresh, token } = generateTokens(user.id);
+			const { refresh, token } = generateTokens(user.id, user.passwordHash);
 
 			const response = new AuthResponse();
 			response.setRefresh(refresh);
@@ -101,6 +101,7 @@ function getServer() {
 			reply(null, response);
 		},
 		checkToken: () => {},
+		refreshToken: () => {},
 		register: async (payload, reply) => {
 			const body = await registerSchema.parseAsync(payload.request.toObject());
 
@@ -120,7 +121,7 @@ function getServer() {
 					.returning();
 
 				const response = new RegisterResponse();
-				const { refresh, token } = generateTokens(user.id);
+				const { refresh, token } = generateTokens(user.id, passwordHash);
 
 				response.setToken(token);
 				response.setRefresh(refresh);

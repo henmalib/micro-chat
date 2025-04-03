@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+SCRIPT_DIR=$(dirname $(realpath -s $0))
 cd $SCRIPT_DIR/../
 
 PATH=$(pnpm bin):$PATH
