@@ -1,10 +1,13 @@
 import * as grpc from '@grpc/grpc-js';
+import db from '@shared/database';
+import { userSchema } from '@shared/database/db/schema';
+import {
+	AuthService,
+	type IAuthServer,
+} from '@shared/grpc/auth/v1/auth_grpc_pb';
+import { AuthResponse, RegisterResponse } from '@shared/grpc/auth/v1/auth_pb';
 import * as bcrypt from 'bcrypt';
-import { userSchema } from 'database/db/schema';
-import db from 'database/index';
 import { eq } from 'drizzle-orm';
-import { AuthService, type IAuthServer } from 'grpc/auth/v1/auth_grpc_pb';
-import { AuthResponse, RegisterResponse } from 'grpc/auth/v1/auth_pb';
 import * as jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import { env } from './env';

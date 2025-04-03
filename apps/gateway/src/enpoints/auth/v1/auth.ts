@@ -1,5 +1,5 @@
 import { zValidator } from '@hono/zod-validator';
-import { AuthRequest } from 'grpc/auth/v1/auth_pb';
+import { AuthRequest } from '@shared/grpc/auth/v1/auth_pb';
 import { Hono } from 'hono';
 import { z } from 'zod';
 import { clients } from '../../../constants';

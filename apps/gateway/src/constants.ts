@@ -1,6 +1,6 @@
 import * as grpc from '@grpc/grpc-js';
-import { AuthClient } from 'grpc/auth/v1/auth_grpc_pb';
-import { RoomsClient } from 'grpc/rooms/v1/rooms_grpc_pb';
+import { AuthClient } from '@shared/grpc/auth/v1/auth_grpc_pb';
+import { RoomsClient } from '@shared/grpc/rooms/v1/rooms_grpc_pb';
 import { z } from 'zod';
 import { promisifyClient } from './util/promisifyClient';
 
