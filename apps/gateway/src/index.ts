@@ -10,5 +10,5 @@ app.route('/auth/v1', v1AuthHandler);
 
 serve({
 	fetch: app.fetch,
-    port: 3000
+	port: 3000,
 });

@@ -10,7 +10,6 @@ import {
 	type RegisterRequest,
 	RegisterResponse,
 } from '@shared/grpc/auth/v1/auth_pb';
-import { GRPCServerError } from '@shared/grpc/error';
 import { getRandomInt } from '@shared/utils';
 import * as bcrypt from 'bcrypt';
 import { eq } from 'drizzle-orm';

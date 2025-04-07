@@ -1,4 +1,3 @@
-import * as grpc from '@grpc/grpc-js';
 import { zValidator } from '@hono/zod-validator';
 import { AuthRequest, RegisterRequest } from '@shared/grpc/auth/v1/auth_pb';
 import { Hono } from 'hono';

@@ -1,5 +1,4 @@
 import {
-	date,
 	integer,
 	pgTable,
 	serial,
