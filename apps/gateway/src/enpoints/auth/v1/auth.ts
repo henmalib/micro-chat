@@ -4,6 +4,7 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 import { clients } from '../../../constants';
 import { ErrorCodes, getErrorObject } from '../../../util/errorResponse';
+import { HttpStatus } from '../../../util/httpCodes';
 
 const app = new Hono();
 
@@ -36,8 +37,10 @@ app.post('/login', zValidator('json', loginSchema), async (ctx) => {
 			accessToken: response.getToken(),
 		});
 	} catch {
-		// TODO: create a constant object with all http codes
-		return ctx.json(getErrorObject(ErrorCodes.WRONG_PASS_EMAIL), 400);
+		return ctx.json(
+			getErrorObject(ErrorCodes.WRONG_PASS_EMAIL),
+			HttpStatus.BAD_REQUEST,
+		);
 	}
 });
 
@@ -54,10 +57,13 @@ app.post('/register', zValidator('json', registerSchema), async (ctx) => {
 	try {
 		const response = await clients.auth.register(payload);
 
-		return ctx.json({
-			userId: response.getUserId(),
-			accessToken: response.getToken(),
-		});
+		return ctx.json(
+			{
+				userId: response.getUserId(),
+				accessToken: response.getToken(),
+			},
+			HttpStatus.CREATED,
+		);
 	} catch (e) {
 		if (!(e instanceof Error)) throw e;
 
