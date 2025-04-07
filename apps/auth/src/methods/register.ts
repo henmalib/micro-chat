@@ -7,17 +7,16 @@ import {
 	RegisterResponse,
 } from '@shared/grpc/auth/v1/auth_pb';
 import * as bcrypt from 'bcrypt';
-import { type ZodSchema, z } from 'zod';
+import { z } from 'zod';
 import { createSession } from '../session';
-import { generatePeper } from './utils/generatePepper';
+import { generatePeper } from '../utils/generatePepper';
+import { zObject } from '../utils/zodHelper';
 
-const registerSchema = z.object({
+const registerSchema = zObject<RegisterRequest.AsObject>({
 	email: z.string().email('Email has wrong format'),
 	password: z.string().min(8, 'Password should be at least 8 characters long'),
 	username: z.string().min(3, "Nickname can't be shorted than 3 charatres"),
 	userAgent: z.string(),
-} satisfies {
-	[key in keyof RegisterRequest.AsObject]: ZodSchema;
 });
 
 export const registerMethod =

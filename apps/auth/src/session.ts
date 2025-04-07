@@ -5,7 +5,7 @@ import { sessionSchema } from '@shared/database/db/schema';
 export const createSession = async (
 	db: DBConnection,
 	userId: number,
-	userAgent: string,
+	userAgent?: string,
 ) => {
 	const token = randomBytes(64).toString('hex');
 
