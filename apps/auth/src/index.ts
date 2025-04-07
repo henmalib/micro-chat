@@ -1,17 +1,17 @@
 import * as grpc from '@grpc/grpc-js';
+import { initDBConnection } from '@shared/database';
 import { userSchema } from '@shared/database/db/schema';
 import {
 	AuthService,
 	type IAuthServer,
 } from '@shared/grpc/auth/v1/auth_grpc_pb';
 import { AuthResponse, RegisterResponse } from '@shared/grpc/auth/v1/auth_pb';
+import { getRandomInt } from '@shared/utils';
 import * as bcrypt from 'bcrypt';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { env } from './env';
-import { initDBConnection } from '@shared/database';
 import { createSession } from './session';
-import { getRandomInt } from '@shared/utils';
 
 const db = initDBConnection();
 
