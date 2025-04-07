@@ -11,13 +11,11 @@ const env = z
 	})
 	.parse(process.env);
 
-// TODO: take Url from ENV
 export const clients = {
 	rooms: promisifyClient(
 		new RoomsClient(env.GRPC_ROOM_SERVER, grpc.credentials.createInsecure()),
 	),
 	auth: promisifyClient(
-		// TODO: use zod
 		new AuthClient(env.GRPC_AUTH_SERVER, grpc.credentials.createInsecure()),
 	),
 };
