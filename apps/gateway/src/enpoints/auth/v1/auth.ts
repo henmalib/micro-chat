@@ -21,17 +21,19 @@ const registerSchema = z.object({
 
 app.post('/login', zValidator('json', loginSchema), async (ctx) => {
 	const body = ctx.req.valid('json');
+	const userAgent = ctx.req.header('User-Agent');
 
 	const payload = new AuthRequest();
 	payload.setEmail(body.email);
 	payload.setPassword(body.password);
+	if (userAgent) payload.setUserAgent(userAgent);
 
 	try {
 		const response = await clients.auth.auth(payload);
 
 		return ctx.json({
+			userId: response.getUserId(),
 			accessToken: response.getToken(),
-			refreshToken: response.getRefresh(),
 		});
 	} catch {
 		// TODO: create a constant object with all http codes

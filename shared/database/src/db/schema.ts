@@ -29,7 +29,11 @@ export const sessionSchema = pgTable(
 		userId: integer('user_id')
 			.notNull()
 			.references(() => userSchema.id),
-		refreshToken: text('refresh_token').notNull().unique(),
+		token: text('token').notNull().unique(),
+		userAgent: text('ua'),
+		lastUsage: date('last_use').defaultNow().notNull(),
+
+		createdAt: date('created_at').defaultNow().notNull(),
 	},
-	(table) => [uniqueIndex('refresh_index').on(table.refreshToken)],
+	(table) => [uniqueIndex('token_index').on(table.token)],
 );

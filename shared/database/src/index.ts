@@ -8,8 +8,12 @@ const env = {
 	DB_NAME: process.env.PG_NAME,
 };
 
-const db = drizzle(
-	`postgres://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}`,
-);
+export const initDBConnection = () => {
+	const connection = drizzle(
+		`postgres://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}`,
+	);
 
-export default db;
+	return connection;
+};
+
+export type DBConnection = ReturnType<typeof initDBConnection>;

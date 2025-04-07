@@ -1,5 +1,4 @@
 import * as grpc from '@grpc/grpc-js';
-import db from '@shared/database';
 import { userSchema } from '@shared/database/db/schema';
 import {
 	AuthService,
@@ -8,21 +7,20 @@ import {
 import { AuthResponse, RegisterResponse } from '@shared/grpc/auth/v1/auth_pb';
 import * as bcrypt from 'bcrypt';
 import { eq } from 'drizzle-orm';
-import * as jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import { env } from './env';
+import { initDBConnection } from '@shared/database';
+import { createSession } from './session';
+import { getRandomInt } from '@shared/utils';
+
+const db = initDBConnection();
 
 const registerSchema = z.object({
 	email: z.string().email('Email has wrong format'),
 	password: z.string().min(8, 'Password should be at least 8 characters long'),
 	nickname: z.string().min(3, "Nickname can't be shorted than 3 charatres"),
+	userAgent: z.string(),
 });
-
-function getRandomInt(min: number, max: number) {
-	const mn = Math.ceil(min);
-	const mx = Math.floor(max);
-	return Math.floor(Math.random() * (mx - mn + 1)) + mn;
-}
 
 const characters = ['qwertyuiopasdfghjklzxcvbnm'];
 characters.push(characters[0].toUpperCase());
@@ -36,31 +34,6 @@ const generatePeper = (length = 8) => {
 	}
 
 	return result;
-};
-
-const generateTokens = (userId: number, hash: string) => {
-	const token = jwt.sign(
-		{
-			userId: userId,
-		},
-		env.JWT_SECRET,
-		{ expiresIn: '10m' },
-	);
-
-	// TODO: save refresh token in db
-	// TODO: reset old refresh token, create a new one with same exp date
-	const refresh = jwt.sign(
-		{
-			userId: userId,
-		},
-		env.REFRESH_SECRET + hash,
-		{ expiresIn: '30d' },
-	);
-
-	return {
-		token,
-		refresh,
-	};
 };
 
 function getServer() {
@@ -95,11 +68,12 @@ function getServer() {
 				return reply(new Error('Wrong password'), null);
 			}
 
-			const { refresh, token } = generateTokens(user.id, user.passwordHash);
+			// TODO: May throw an error, we should handle it
+			const session = await createSession(db, user.id, body.getUserAgent());
 
 			const response = new AuthResponse();
-			response.setRefresh(refresh);
-			response.setToken(token);
+			response.setToken(session.token);
+			response.setUserId(session.userId);
 
 			reply(null, response);
 		},
@@ -123,11 +97,11 @@ function getServer() {
 					})
 					.returning();
 
-				const response = new RegisterResponse();
-				const { refresh, token } = generateTokens(user.id, passwordHash);
+				const session = await createSession(db, user.id, body.userAgent);
 
-				response.setToken(token);
-				response.setRefresh(refresh);
+				const response = new RegisterResponse();
+
+				response.setToken(session.token);
 				response.setUserId(user.id);
 
 				return reply(null, response);
@@ -142,7 +116,6 @@ function getServer() {
 
 const routeServer = getServer();
 
-// TODO: handle from ENV
 routeServer.bindAsync(
 	env.SERVER_HOST,
 	grpc.ServerCredentials.createInsecure(),
