@@ -5,7 +5,6 @@ pkgs.mkShell {
     nodejs_23
     protobuf
     grpc-tools
-    protoc-gen-js
     gcc
     nix-ld
     lefthook
@@ -16,7 +15,7 @@ pkgs.mkShell {
   ];
 
   shellHook = ''
-    export LD_LIBRARY_PATH=$NIX_LD_LIBRARY_PATH:$LD_LIBRARY_PATH
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$NIX_LD_LIBRARY_PATH
 
     if [ ! -f .env ]
     then
