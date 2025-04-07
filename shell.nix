@@ -13,6 +13,8 @@ pkgs.mkShell {
   NIX_LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
     pkgs.stdenv.cc.cc
   ];
+  
+  NODE_OPTIONS="--enable-source-maps";
 
   shellHook = ''
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$NIX_LD_LIBRARY_PATH

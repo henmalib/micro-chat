@@ -5,7 +5,7 @@ export enum ErrorCodes {
 const messages: {
 	[key in ErrorCodes]: string;
 } = {
-	[ErrorCodes.WRONG_PASS_EMAIL]: 'Wrong password or email was givven',
+	[ErrorCodes.WRONG_PASS_EMAIL]: 'Wrong password or email was given',
 } as const;
 
 export type ErrorObject = {

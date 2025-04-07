@@ -7,29 +7,42 @@ RUN apt install protobuf-compiler -y
 
 
 FROM base AS build
-COPY package.json pnpm-lock.yaml /usr/src/app/
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml /usr/src/app/
 WORKDIR /usr/src/app
 RUN corepack install
 
-# TODO: copy only package.json
-COPY . /usr/src/app
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --filter "./shared/**" --filter "micro-chat" --frozen-lockfile
+COPY apps/auth/package.json /usr/src/app/apps/auth/package.json
+COPY apps/gateway/package.json /usr/src/app/apps/gateway/package.json
 
-RUN sh /usr/src/app/scripts/generate-types.sh
-RUN cd /usr/src/app/shared/database && pnpm build
+COPY shared/database/package.json /usr/src/app/shared/database/package.json
+COPY shared/utils/package.json /usr/src/app/shared/utils/package.json
+COPY shared/grpc/package.json /usr/src/app/shared/grpc/package.json
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+COPY . .
+
+RUN cd /usr/src/app && sh /usr/src/app/scripts/generate-types.sh
+RUN cd /usr/src/app/shared/database && pnpm build
+RUN cd /usr/src/app/shared/utils && pnpm build
+
 RUN node /usr/src/app/scripts/build.js
 
-RUN pnpm deploy --filter=gateway --prod /prod/gateway --legacy
-RUN pnpm deploy --filter=auth --prod /prod/auth --legacy
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=gateway --prod /prod/gateway --legacy
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=auth --prod /prod/auth --legacy
+
+ENV NODE_OPTIONS=--enable-source-maps
 
 FROM base AS gateway
 COPY --from=build /prod/gateway /prod/gateway
 WORKDIR /prod/gateway
+
+EXPOSE 3000
 CMD [ "npm", "run", "start" ]
 
 FROM base AS auth
 COPY --from=build /prod/auth /prod/auth
 WORKDIR /prod/auth
+
+EXPOSE 50052
 CMD [ "npm", "run", "start" ]

@@ -6,10 +6,8 @@ import { promisifyClient } from './util/promisifyClient';
 
 const env = z
 	.object({
-		GRPC_AUTH_SERVER: z.string().url(),
-		GRPC_ROOM_SERVER: z.string().url(),
-
-		LISTEN_HOST: z.string().url(),
+		GRPC_AUTH_SERVER: z.string(),
+		GRPC_ROOM_SERVER: z.string(),
 	})
 	.parse(process.env);
 

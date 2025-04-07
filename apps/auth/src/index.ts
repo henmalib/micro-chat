@@ -5,11 +5,16 @@ import {
 	AuthService,
 	type IAuthServer,
 } from '@shared/grpc/auth/v1/auth_grpc_pb';
-import { AuthResponse, RegisterResponse } from '@shared/grpc/auth/v1/auth_pb';
+import {
+	AuthResponse,
+	type RegisterRequest,
+	RegisterResponse,
+} from '@shared/grpc/auth/v1/auth_pb';
+import { GRPCServerError } from '@shared/grpc/error';
 import { getRandomInt } from '@shared/utils';
 import * as bcrypt from 'bcrypt';
 import { eq } from 'drizzle-orm';
-import { z } from 'zod';
+import { type ZodSchema, z } from 'zod';
 import { env } from './env';
 import { createSession } from './session';
 
@@ -18,8 +23,10 @@ const db = initDBConnection();
 const registerSchema = z.object({
 	email: z.string().email('Email has wrong format'),
 	password: z.string().min(8, 'Password should be at least 8 characters long'),
-	nickname: z.string().min(3, "Nickname can't be shorted than 3 charatres"),
+	username: z.string().min(3, "Nickname can't be shorted than 3 charatres"),
 	userAgent: z.string(),
+} satisfies {
+	[key in keyof RegisterRequest.AsObject]: ZodSchema;
 });
 
 const characters = ['qwertyuiopasdfghjklzxcvbnm'];
@@ -56,7 +63,13 @@ function getServer() {
 				.execute();
 
 			if (!dbUser?.length)
-				return reply(new Error('No user were found with this email'), null);
+				return reply(
+					{
+						message: 'No user were found with this email',
+						code: grpc.status.NOT_FOUND,
+					},
+					null,
+				);
 
 			const user = dbUser[0];
 
@@ -65,7 +78,10 @@ function getServer() {
 				user.passwordHash,
 			);
 			if (!isRightPass) {
-				return reply(new Error('Wrong password'), null);
+				return reply(
+					{ message: 'Wrong password', code: grpc.status.INVALID_ARGUMENT },
+					null,
+				);
 			}
 
 			// TODO: May throw an error, we should handle it
@@ -80,6 +96,8 @@ function getServer() {
 		checkToken: () => {},
 		refreshToken: () => {},
 		register: async (payload, reply) => {
+			// TODO: is parse fails it crashes the whole server
+			// TODO: Make some sort of a wrapper with safe reply
 			const body = await registerSchema.parseAsync(payload.request.toObject());
 
 			const pepper = generatePeper(8);
@@ -91,7 +109,7 @@ function getServer() {
 					.insert(userSchema)
 					.values({
 						email: body.email,
-						username: body.nickname,
+						username: body.username,
 						pepper,
 						passwordHash,
 					})
@@ -106,7 +124,13 @@ function getServer() {
 
 				return reply(null, response);
 			} catch (e) {
-				return reply(new Error('User with such email already exists'), null);
+				return reply(
+					{
+						message: 'User with such email already exists',
+						code: grpc.status.ALREADY_EXISTS,
+					},
+					null,
+				);
 			}
 		},
 	} satisfies IAuthServer);

@@ -4,8 +4,8 @@ const env = {
 	DB_USER: process.env.PG_USER,
 	DB_PASSWORD: process.env.PG_PASSWORD,
 	DB_HOST: process.env.PG_HOST,
-	DB_PORT: process.env.DB_PORT,
-	DB_NAME: process.env.PG_NAME,
+	DB_PORT: process.env.PG_PORT,
+	DB_NAME: process.env.PG_DB,
 };
 
 export const initDBConnection = () => {

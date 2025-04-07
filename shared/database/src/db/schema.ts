@@ -4,6 +4,7 @@ import {
 	pgTable,
 	serial,
 	text,
+	timestamp,
 	uniqueIndex,
 } from 'drizzle-orm/pg-core';
 
@@ -17,7 +18,7 @@ export const userSchema = pgTable(
 		pepper: text('pepper'),
 		avatarUrl: text('avatar_url'),
 
-		createdAt: date('created_at').defaultNow().notNull(),
+		createdAt: timestamp('created_at').defaultNow().notNull(),
 	},
 	(table) => [uniqueIndex('email_index').on(table.email)],
 );
@@ -28,12 +29,12 @@ export const sessionSchema = pgTable(
 		id: serial('id').primaryKey(),
 		userId: integer('user_id')
 			.notNull()
-			.references(() => userSchema.id),
+			.references(() => userSchema.id, { onDelete: 'cascade' }),
 		token: text('token').notNull().unique(),
 		userAgent: text('ua'),
-		lastUsage: date('last_use').defaultNow().notNull(),
+		lastUsage: timestamp('last_use').defaultNow().notNull(),
 
-		createdAt: date('created_at').defaultNow().notNull(),
+		createdAt: timestamp('created_at').defaultNow().notNull(),
 	},
 	(table) => [uniqueIndex('token_index').on(table.token)],
 );

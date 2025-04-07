@@ -5,12 +5,17 @@
   "files": [
     "dist/**/*.{d.ts,js}"
   ],
-  "scripts": {},
+  "scripts": {
+    "build": "tsc && sh ../../scripts/generate-types.sh"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.6.3",
   "exports": {
     "./*": "./dist/*.js"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.13.1"
   }
 }
