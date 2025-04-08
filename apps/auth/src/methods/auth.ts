@@ -3,11 +3,11 @@ import type { DBConnection } from '@shared/database';
 import { userSchema } from '@shared/database/db/schema';
 import type { IAuthServer } from '@shared/grpc/auth/v1/auth_grpc_pb';
 import { type AuthRequest, AuthResponse } from '@shared/grpc/auth/v1/auth_pb';
+import { zObject } from '@shared/utils/zodHelper';
 import * as bcrypt from 'bcrypt';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { createSession } from '../session';
-import { zObject } from '../utils/zodHelper';
 
 const loginSchema = zObject<AuthRequest.AsObject>({
 	email: z.string().email(),

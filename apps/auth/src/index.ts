@@ -4,10 +4,10 @@ import {
 	AuthService,
 	type IAuthServer,
 } from '@shared/grpc/auth/v1/auth_grpc_pb';
+import { wrapGRPCServerError } from '@shared/utils';
 import { env } from './env';
 import { authMethod } from './methods/auth';
 import { registerMethod } from './methods/register';
-import { wrapError } from './utils/wrapError';
 
 const db = initDBConnection();
 
@@ -15,9 +15,9 @@ function getServer() {
 	const server = new grpc.Server();
 
 	server.addService(AuthService, {
-		auth: wrapError(authMethod(db)),
+		auth: wrapGRPCServerError(authMethod(db)),
 		checkToken: () => {},
-		register: wrapError(registerMethod(db)),
+		register: wrapGRPCServerError(registerMethod(db)),
 	} satisfies IAuthServer);
 
 	return server;

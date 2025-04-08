@@ -6,11 +6,11 @@ import {
 	type RegisterRequest,
 	RegisterResponse,
 } from '@shared/grpc/auth/v1/auth_pb';
+import { zObject } from '@shared/utils/zodHelper';
 import * as bcrypt from 'bcrypt';
 import { z } from 'zod';
 import { createSession } from '../session';
 import { generatePeper } from '../utils/generatePepper';
-import { zObject } from '../utils/zodHelper';
 
 const registerSchema = zObject<RegisterRequest.AsObject>({
 	email: z.string().email('Email has wrong format'),
