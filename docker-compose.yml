@@ -3,6 +3,7 @@ services:
     environment:
       - GRPC_AUTH_SERVER=auth:50052
       - GRPC_ROOM_SERVER=rooms:50051
+      - GRPC_USER_SERVER=users:50053
     build:
       context: .
       target: gateway
@@ -10,6 +11,8 @@ services:
       - 3000:3000
     depends_on:
       - auth
+      - valkey
+      - users
 
   auth:
     environment:
@@ -25,6 +28,20 @@ services:
     build:
       context: .
       target: auth
+    depends_on:
+      - db
+
+  users:
+    environment:
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_USER=${PG_USER}
+      - PG_DB=${PG_DB}
+
+      - PG_HOST=db
+      - PG_PORT=5432
+    build:
+      context: .
+      target: users
     depends_on:
       - db
 

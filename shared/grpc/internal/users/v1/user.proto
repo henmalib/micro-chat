@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+service User {
+    rpc GetUser(GetUserRequest) returns (GetUserResponse) {}; 
+}
+
+message GetUserRequest {
+    int64 user_id = 1;
+}
+
+message GetUserResponse {
+    int64 id = 1;
+    string username = 2;
+    optional string avatar_url = 3;
+    google.protobuf.Timestamp created_at = 4;
+}

@@ -13,6 +13,7 @@ RUN corepack install
 
 COPY apps/auth/package.json /usr/src/app/apps/auth/package.json
 COPY apps/gateway/package.json /usr/src/app/apps/gateway/package.json
+COPY apps/users/package.json /usr/src/app/apps/users/package.json
 
 COPY shared/database/package.json /usr/src/app/shared/database/package.json
 COPY shared/utils/package.json /usr/src/app/shared/utils/package.json
@@ -27,6 +28,7 @@ RUN pnpm build:packages
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=gateway --prod /prod/gateway --legacy
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=auth --prod /prod/auth --legacy
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=users --prod /prod/users --legacy
 
 ENV NODE_OPTIONS=--enable-source-maps
 
@@ -42,4 +44,11 @@ COPY --from=build /prod/auth /prod/auth
 WORKDIR /prod/auth
 
 EXPOSE 50052
+CMD [ "npm", "run", "start" ]
+
+FROM base AS users
+COPY --from=build /prod/users /prod/users
+WORKDIR /prod/users
+
+EXPOSE 50053
 CMD [ "npm", "run", "start" ]
