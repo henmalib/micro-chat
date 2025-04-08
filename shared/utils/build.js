@@ -1,14 +1,19 @@
 const esbuild = require('esbuild');
+const { glob } = require('node:fs');
+const util = require('node:util');
 
-esbuild
-	.build({
+const gl = util.promisify(glob);
+
+const main = async () => {
+	const entryPoints = await gl('./src/**/*.ts');
+
+	await esbuild.build({
 		platform: 'node',
 		format: 'cjs',
-		entryPoints: ['./src/index.ts'],
+		entryPoints,
 		outdir: 'dist',
 		sourcemap: true,
-	})
-	.catch((e) => {
-		console.error(e);
-		process.exit(1);
 	});
+};
+
+main();

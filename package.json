@@ -6,7 +6,8 @@
   "scripts": {
     "proto:gen": "./scripts/generate-types.sh",
     "check": "pnpx @biomejs/biome check --no-errors-on-unmatched --files-ignore-unknown=true --organize-imports-enabled=true --fix ./{apps,shared}",
-    "build:all": "node scripts/build.js"
+    "build:utils": "pnpm -r build --filter './shared'",
+    "build:packages": "node scripts/build.js"
   },
   "keywords": [],
   "author": "",
