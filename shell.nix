@@ -6,19 +6,10 @@ pkgs.mkShell {
     protobuf
     grpc-tools
     gcc
-    nix-ld
     lefthook
   ];
 
-  NIX_LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
-    pkgs.stdenv.cc.cc
-  ];
-  
-  NODE_OPTIONS="--enable-source-maps";
-
   shellHook = ''
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$NIX_LD_LIBRARY_PATH
-
     if [ ! -f .env ]
     then
       export $(cat .env | xargs)
@@ -26,5 +17,6 @@ pkgs.mkShell {
 
     set -a && source .env && set +a
     lefthook install
+    fish
   '';
 }

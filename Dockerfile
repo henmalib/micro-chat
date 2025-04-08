@@ -22,11 +22,8 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 COPY . .
 
-RUN cd /usr/src/app && sh /usr/src/app/scripts/generate-types.sh
-RUN cd /usr/src/app/shared/database && pnpm build
-RUN cd /usr/src/app/shared/utils && pnpm build
-
-RUN node /usr/src/app/scripts/build.js
+RUN pnpm -r build:utils
+RUN pnpm build:packages
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=gateway --prod /prod/gateway --legacy
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=auth --prod /prod/auth --legacy
