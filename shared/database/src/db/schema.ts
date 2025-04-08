@@ -1,11 +1,14 @@
 import {
 	integer,
+	pgEnum,
 	pgTable,
 	serial,
 	text,
 	timestamp,
 	uniqueIndex,
 } from 'drizzle-orm/pg-core';
+
+const permissionEnum = pgEnum('permission_enum', ['ADMIN', 'USER']);
 
 export const userSchema = pgTable(
 	'users',
@@ -14,8 +17,9 @@ export const userSchema = pgTable(
 		username: text('username').notNull().unique(),
 		email: text('email').notNull().unique(),
 		passwordHash: text('password_hash').notNull(),
-		pepper: text('pepper'),
+		pepper: text('pepper').notNull(),
 		avatarUrl: text('avatar_url'),
+		permission: permissionEnum('permission').default('USER').notNull(),
 
 		createdAt: timestamp('created_at').defaultNow().notNull(),
 	},
