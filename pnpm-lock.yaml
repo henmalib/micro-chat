@@ -48,9 +48,6 @@ importers:
       '@grpc/grpc-js':
         specifier: ^1.13.1
         version: 1.13.1
-      '@grpc/proto-loader':
-        specifier: ^0.7.13
-        version: 0.7.13
       '@shared/database':
         specifier: link:../../shared/database
         version: link:../../shared/database
@@ -73,9 +70,6 @@ importers:
       '@types/bcrypt':
         specifier: ^5.0.2
         version: 5.0.2
-      '@types/jsonwebtoken':
-        specifier: ^9.0.9
-        version: 9.0.9
       '@types/node':
         specifier: ^22.13.11
         version: 22.13.11
@@ -198,6 +192,9 @@ importers:
 
   apps/users:
     dependencies:
+      '@grpc/grpc-js':
+        specifier: ^1.13.1
+        version: 1.13.1
       '@shared/database':
         specifier: link:../../shared/database
         version: link:../../shared/database
@@ -207,6 +204,12 @@ importers:
       '@shared/utils':
         specifier: link:../../shared/utils
         version: link:../../shared/utils
+      drizzle-orm:
+        specifier: ^0.41.0
+        version: 0.41.0(@types/pg@8.11.11)(gel@2.0.1)(pg@8.14.1)
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@types/node':
         specifier: ^22.13.11
@@ -817,12 +820,6 @@ packages:
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
-
-  '@types/jsonwebtoken@9.0.9':
-    resolution: {integrity: sha512-uoe+GxEuHbvy12OUQct2X9JenKM3qAscquYymuQN4fMWG9DBQtykrQEFcAbVACF7qaLw9BePSodUL0kquqBJpQ==}
-
-  '@types/ms@2.1.0':
-    resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
   '@types/node@22.13.11':
     resolution: {integrity: sha512-iEUCUJoU0i3VnrCmgoWCXttklWcvoCIx4jzcP22fioIVSdTmjgoEvmAO/QPw6TcS9k5FrNgn4w7q5lGOd1CT5g==}
@@ -1826,13 +1823,6 @@ snapshots:
       '@types/node': 22.13.11
 
   '@types/json-schema@7.0.15': {}
-
-  '@types/jsonwebtoken@9.0.9':
-    dependencies:
-      '@types/ms': 2.1.0
-      '@types/node': 22.13.11
-
-  '@types/ms@2.1.0': {}
 
   '@types/node@22.13.11':
     dependencies:
