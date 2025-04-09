@@ -16,6 +16,12 @@
     "./*": "./dist/*.js"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.13.1"
+    "@grpc/grpc-js": "^1.13.1",
+    "google-protobuf": "^3.21.4"
+  },
+  "devDependencies": {
+    "grpc-tools": "1.12.4",
+    "protoc-gen-js": "3.21.4-4",
+    "ts-protoc-gen": "^0.15.0"
   }
 }

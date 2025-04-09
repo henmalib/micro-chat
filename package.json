@@ -17,15 +17,6 @@
     "@biomejs/biome": "1.9.4",
     "@types/node": "^22.13.11",
     "esbuild": "^0.25.1",
-    "grpc-tools": "1.12.4",
-    "protoc-gen-js": "3.21.4-4",
-    "ts-protoc-gen": "^0.15.0",
-    "turbo": "^2.4.4",
     "typescript": "^5.8.2"
-  },
-  "dependencies": {
-    "@grpc/grpc-js": "^1.13.1",
-    "@grpc/proto-loader": "^0.7.13",
-    "google-protobuf": "^3.21.4"
   }
 }

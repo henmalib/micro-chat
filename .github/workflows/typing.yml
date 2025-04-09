@@ -30,15 +30,8 @@ jobs:
       - name: Install Protoc
         uses: arduino/setup-protoc@v3
 
-      - name: Generate GRPC files
-        run: pnpm proto:gen
-
-      # TODO: make unified script for every shared package    
-      - name: Generate Database Module
-        run: cd shared/database && pnpm build && cd ../..
-
-      - name: Build utils
-        run: cd shared/utils && pnpm build && cd ../..
+      - name: Build Shared Folder
+        run: pnpm build:utils
 
       - run: npx tsc --noEmit
         name: Check Project Types

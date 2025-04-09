@@ -16,7 +16,8 @@ export const checkTokenMethod =
 				userId: sessionSchema.userId,
 			})
 			.from(sessionSchema)
-			.where(eq(sessionSchema.token, token));
+			.where(eq(sessionSchema.token, token))
+			.execute();
 
 		if (!session.length)
 			reply({
