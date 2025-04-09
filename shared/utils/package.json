@@ -14,7 +14,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "GPLV3",
+  "license": "GPL-3.0",
   "packageManager": "pnpm@10.6.3",
   "dependencies": {
     "@grpc/grpc-js": "^1.13.1",
