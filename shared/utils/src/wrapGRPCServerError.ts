@@ -1,8 +1,6 @@
 import * as grpc from '@grpc/grpc-js';
 import type { handleUnaryCall } from '@grpc/grpc-js';
 
-// TODO: move to @shared/utils
-
 // This function is too generic to be properly typed
 
 // biome-ignore lint/suspicious/noExplicitAny: using unknown here wouldn't allow this function to be used anywhere without typing
