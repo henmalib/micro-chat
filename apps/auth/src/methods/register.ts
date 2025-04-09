@@ -52,7 +52,7 @@ export const registerMethod =
 		} catch (e) {
 			return reply(
 				{
-					message: 'User with such email already exists',
+					message: 'User with such email or username already exists',
 					code: grpc.status.ALREADY_EXISTS,
 				},
 				null,
