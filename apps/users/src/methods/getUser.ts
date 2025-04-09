@@ -30,7 +30,7 @@ export const getUserMethod =
 		if (users[0].avatarUrl) response.setAvatarUrl(users[0].avatarUrl);
 		response.setUsername(users[0].username);
 		response.setId(userId);
-		response.setCreatedAt(users[0].createdAt);
+		response.setCreatedAt(users[0].createdAt.getTime());
 
 		reply(null, response);
 	};
