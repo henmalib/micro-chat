@@ -6,7 +6,7 @@
     "dist/**/*.{d.ts,js}"
   ],
   "scripts": {
-    "build": "sh ../../scripts/generate-types.sh"
+    "build": "sh ./generate-types.sh"
   },
   "keywords": [],
   "author": "",
