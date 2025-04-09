@@ -29,6 +29,13 @@
       "when": 1744199399791,
       "tag": "0003_fine_ghost_rider",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1744212018476,
+      "tag": "0004_oval_spitfire",
+      "breakpoints": true
     }
   ]
 }
