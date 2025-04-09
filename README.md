@@ -11,7 +11,7 @@ Every service is located inside **apps** folder, while every library located ins
 
 Project is configured using pnpm workspaces, **shared** have separate build scripts, every app has unified script **scripts/build.js**
 
-gRPC .proto files are located under **shared/grpc/internal** and code/types for it are generated with **scripts/generate-types.sh**
+gRPC .proto files are located under **shared/grpc/internal** and code/types for it are generated with `pnpm build` in it's folder
 
 Every app, that's beign worked on has it's own README.md with short explanation of underlying functionality/usage
 
