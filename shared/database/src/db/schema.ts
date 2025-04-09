@@ -8,7 +8,7 @@ import {
 	uniqueIndex,
 } from 'drizzle-orm/pg-core';
 
-const permissionEnum = pgEnum('permission_enum', ['ADMIN', 'USER']);
+export const permissionEnum = pgEnum('permission_enum', ['ADMIN', 'USER']);
 
 export const userSchema = pgTable(
 	'users',
