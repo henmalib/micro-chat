@@ -3,3 +3,6 @@ pre-commit:
     check:
       glob: "*.{js,ts,json}"
       run: pnpx @biomejs/biome check --no-errors-on-unmatched --files-ignore-unknown=true --organize-imports-enabled=true --colors=off --fix {staged_files} && git add {staged_files}
+    license:
+      run: node scripts/add-license.js && git add .
+
