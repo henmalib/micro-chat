@@ -13,5 +13,4 @@ After password reset all sessions will be deleted and new pepper would be genera
 
 ###### TODO:
 - [ ] Password Reset
-- [ ] Token Verify
 - [ ] Write new Sessions to cache

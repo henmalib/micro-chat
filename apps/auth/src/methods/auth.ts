@@ -18,8 +18,12 @@ const loginSchema = zObject<AuthRequest.AsObject>({
 export const authMethod =
 	(db: DBConnection): IAuthServer['auth'] =>
 	async (payload, reply) => {
-		// TODO: handle error
-		const body = await loginSchema.parseAsync(payload.request.toObject());
+		const result = await loginSchema.safeParseAsync(payload.request.toObject());
+		if (!result.success)
+			return reply({
+				code: grpc.status.INVALID_ARGUMENT,
+				message: result.error.message,
+			});
 
 		const dbUser = await db
 			.select({
@@ -29,23 +33,20 @@ export const authMethod =
 				pepper: userSchema.pepper,
 			})
 			.from(userSchema)
-			.where(eq(userSchema.email, body.email))
+			.where(eq(userSchema.email, result.data.email))
 			.limit(1)
 			.execute();
 
 		if (!dbUser?.length)
-			return reply(
-				{
-					message: 'No user were found with this email',
-					code: grpc.status.NOT_FOUND,
-				},
-				null,
-			);
+			return reply({
+				message: 'No user were found with this email',
+				code: grpc.status.NOT_FOUND,
+			});
 
 		const user = dbUser[0];
 
 		const isRightPass = await bcrypt.compare(
-			body.password + user.pepper,
+			result.data.password + user.pepper,
 			user.passwordHash,
 		);
 		if (!isRightPass) {
@@ -56,7 +57,7 @@ export const authMethod =
 		}
 
 		// TODO: May throw an error, we should handle it
-		const session = await createSession(db, user.id, body.userAgent);
+		const session = await createSession(db, user.id, result.data.userAgent);
 
 		const response = new AuthResponse();
 		response.setToken(session.token);

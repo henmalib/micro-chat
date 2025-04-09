@@ -29,19 +29,17 @@ app.post('/login', zValidator('json', loginSchema), async (ctx) => {
 	payload.setPassword(body.password);
 	if (userAgent) payload.setUserAgent(userAgent);
 
-	try {
-		const response = await clients.auth.auth(payload);
-
-		return ctx.json({
-			userId: response.getUserId(),
-			accessToken: response.getToken(),
-		});
-	} catch {
+	const [error, response] = await clients.auth.authSafe(payload);
+	if (error)
 		return ctx.json(
 			getErrorObject(ErrorCodes.WRONG_PASS_EMAIL),
 			HttpStatus.BAD_REQUEST,
 		);
-	}
+
+	return ctx.json({
+		userId: response.getUserId(),
+		accessToken: response.getToken(),
+	});
 });
 
 app.post('/register', zValidator('json', registerSchema), async (ctx) => {
@@ -54,27 +52,22 @@ app.post('/register', zValidator('json', registerSchema), async (ctx) => {
 	payload.setUsername(body.username);
 	if (userAgent) payload.setUserAgent(userAgent);
 
-	try {
-		const response = await clients.auth.register(payload);
+	const [error, response] = await clients.auth.registerSafe(payload);
 
-		return ctx.json(
-			{
-				userId: response.getUserId(),
-				accessToken: response.getToken(),
-			},
-			HttpStatus.CREATED,
-		);
-	} catch (e) {
-		if (!(e instanceof Error)) throw e;
-
+	if (error)
 		return ctx.json({
-			// TODO: type Grpc Error
 			// TODO: map to a propper error
-			// @ts-ignore
-			code: e.code,
-			message: e.message,
+			code: error.code,
+			message: error.message,
 		});
-	}
+
+	return ctx.json(
+		{
+			userId: response.getUserId(),
+			accessToken: response.getToken(),
+		},
+		HttpStatus.CREATED,
+	);
 });
 
 export default app;

@@ -27,11 +27,12 @@ interface GRPCError {
 	message: string;
 }
 
+type SafeCallResult<U> = [GRPCError, null | undefined] | [null | undefined, U];
 type SafePromisifiedCall<T, U> = (
 	request: T,
 	metadata?: Metadata,
 	options?: Partial<CallOptions>,
-) => Promise<[GRPCError, U]>;
+) => Promise<SafeCallResult<U>>;
 
 export type PromisifiedClient<C> = { $: C } & {
 	[prop in Exclude<keyof C, keyof Client>]: C[prop] extends OriginalCall<

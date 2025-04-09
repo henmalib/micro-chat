@@ -29,13 +29,10 @@ export const ensureAuth = () => {
 		const payload = new CheckTokenRequest();
 		payload.setToken(token);
 
-		try {
-			const response = await clients.auth.checkToken(payload);
-			context.set('userId', response.getUserId());
-		} catch (e) {
-			// TODO: propper error handling
-			return unauthorized(context);
-		}
+		const [error, response] = await clients.auth.checkTokenSafe(payload);
+
+		if (error) return unauthorized(context);
+		context.set('userId', response.getUserId());
 
 		await next();
 	});

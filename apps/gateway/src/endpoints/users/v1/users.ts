@@ -31,8 +31,6 @@ app.get(
 
 		const [error, user] = await clients.users.getUserSafe(payload);
 
-		console.log(error, user);
-
 		if (error) {
 			return ctx.json(
 				getErrorObject(ErrorCodes.NOT_FOUND),
