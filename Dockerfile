@@ -1,13 +1,16 @@
 FROM node:23-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+ENV NODE_ENV=production
+ENV NODE_OPTIONS=--enable-source-maps
 RUN corepack enable
-RUN apt update
-RUN apt install protobuf-compiler -y
 
 
 FROM base AS build
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml /usr/src/app/
+RUN apt update
+RUN apt install protobuf-compiler -y
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc /usr/src/app/
 WORKDIR /usr/src/app
 RUN corepack install
 
@@ -19,18 +22,18 @@ COPY shared/database/package.json /usr/src/app/shared/database/package.json
 COPY shared/utils/package.json /usr/src/app/shared/utils/package.json
 COPY shared/grpc/package.json /usr/src/app/shared/grpc/package.json
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm fetch
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --offline -r
 
 COPY . .
 
 RUN pnpm -r build:utils
 RUN pnpm build:packages
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=gateway --prod /prod/gateway --legacy
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=auth --prod /prod/auth --legacy
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=users --prod /prod/users --legacy
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=gateway --offline --prod /prod/gateway
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=auth --offline --prod /prod/auth
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=users --offline --prod /prod/users
 
-ENV NODE_OPTIONS=--enable-source-maps
 
 FROM base AS gateway
 COPY --from=build /prod/gateway /prod/gateway
