@@ -9,6 +9,8 @@ pkgs.mkShell {
     lefthook
   ];
 
+  COMPOSE_BAKE=true;
+
   shellHook = ''
     if [ ! -f .env ]
     then

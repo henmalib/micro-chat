@@ -4,6 +4,8 @@ services:
       - GRPC_AUTH_SERVER=auth:50052
       - GRPC_ROOM_SERVER=rooms:50051
       - GRPC_USER_SERVER=users:50053
+
+      - REDIS_CONNECTION=${REDIS_CONNECTION}
     build:
       context: .
       target: gateway
@@ -11,7 +13,7 @@ services:
       - 3000:3000
     depends_on:
       - auth
-      - valkey
+      - redis
       - users
 
   auth:
@@ -57,24 +59,16 @@ services:
       POSTGRES_USER: ${PG_USER}
       POSTGRES_DB: ${PG_DB}
 
-  valkey:
-    image: valkey/valkey:8.0.2-alpine
-    ports:
-      - 6379:6379
-
-  minio:
-    image: quay.io/minio/minio
-    ports:
-      - 19000:9000
-      - 19001:9001
-    environment:
-      MINIO_ROOT_USER: ${MINIO_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
-    volumes:
-      - ./.docker/minio:/data
-    command: server --console-address ":9001" /data
-
-  rabbitmq:
-    image: rabbitmq:4.0.7-alpine
-    ports:
-      - 5672:5672
+  redis:
+    image: redis:8.0-alpine
+    # minio:
+    #   image: quay.io/minio/minio
+    #   ports:
+    #     - 19000:9000
+    #     - 19001:9001
+    #   environment:
+    #     MINIO_ROOT_USER: ${MINIO_USER}
+    #     MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
+    #   volumes:
+    #     - ./.docker/minio:/data
+    #   command: server --console-address ":9001" /data
